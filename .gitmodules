@@ -1,0 +1,9 @@
+[submodule "health_monitor_spring"]
+	path = health_monitor_spring
+	url = https://github.com/Bilal-Motassim/health_monitor_spring.git
+[submodule "health_monitor_angular"]
+	path = health_monitor_angular
+	url = https://github.com/Bilal-Motassim/health_monitor_angular.git
+[submodule "health_monitor_flutter"]
+	path = health_monitor_flutter
+	url = https://github.com/Bilal-Motassim/health_monitor_flutter.git
