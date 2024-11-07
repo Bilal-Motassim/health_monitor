@@ -1,0 +1,33 @@
+services:
+  spring-backend:
+    build:
+      context: ./health_monitor_spring
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/health
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+
+  angular-frontend:
+    build:
+      context: .
+      dockerfile: ./health_monitor_angular/Dockerfile
+    ports:
+      - "4200:4200"
+
+  flutter-web:
+    build:
+      context: ./health_monitor_flutter
+    ports:
+      - "80:80"
+
+  db:
+    image: mysql:8.0.33
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: health
