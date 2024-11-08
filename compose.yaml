@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   spring-backend:
     container_name: health_monitor_spring_backend
