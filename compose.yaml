@@ -1,33 +1,63 @@
+version: '3.8'
+
 services:
   spring-backend:
+    container_name: health_monitor_spring_backend
     build:
       context: ./health_monitor_spring
+      dockerfile: Dockerfile  
     ports:
       - "8080:8080"
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy  
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/health
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: ""  
+    networks:
+      - net1
 
   angular-frontend:
+    container_name: health_monitor_angular_frontend
     build:
       context: .
       dockerfile: ./health_monitor_angular/Dockerfile
     ports:
       - "4200:4200"
+    networks:
+      - net1
 
   flutter-web:
+    container_name: health_monitor_flutter_web
     build:
       context: ./health_monitor_flutter
     ports:
       - "80:80"
+    networks:
+      - net1
 
   db:
+    container_name: health_monitor_db
     image: mysql:8.0.33
     environment:
-      MYSQL_ROOT_PASSWORD: ""
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: "" 
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  
       MYSQL_DATABASE: health
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "3308:3306"
+    networks:
+      - net1
+    volumes:
+      - health_db_data:/var/lib/mysql
+
+networks:
+  net1:
+
+volumes:
+  health_db_data:
