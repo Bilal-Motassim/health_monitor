@@ -7,3 +7,6 @@
 [submodule "health_monitor_flutter"]
 	path = health_monitor_flutter
 	url = https://github.com/Bilal-Motassim/health_monitor_flutter.git
+[submodule "health_monitor_flask"]
+	path = health_monitor_flask
+	url = https://github.com/Bilal-Motassim/health_monitor_flask.git
