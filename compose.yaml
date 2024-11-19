@@ -3,24 +3,24 @@ services:
     container_name: health_monitor_spring_backend
     build:
       context: ./health_monitor_spring
-      dockerfile: Dockerfile  
+      dockerfile: dockerfile
     ports:
       - "8080:8080"
     depends_on:
       db:
-        condition: service_healthy  
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/health
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""  
+      SPRING_DATASOURCE_PASSWORD: ""
     networks:
       - net1
 
   angular-frontend:
     container_name: health_monitor_angular_frontend
     build:
-      context: .
-      dockerfile: ./health_monitor_angular/Dockerfile
+      context: ./health_monitor_angular
+      dockerfile: dockerfile
     ports:
       - "4200:4200"
     networks:
@@ -30,8 +30,28 @@ services:
     container_name: health_monitor_flutter_web
     build:
       context: ./health_monitor_flutter
+      dockerfile: dockerfile
     ports:
       - "80:80"
+    networks:
+      - net1
+
+  flask-backend:
+    container_name: health_monitor_flask_backend
+    build:
+      context: ./health_monitor_flask
+      dockerfile: dockerfile
+    ports:
+      - "8000:8000"
+    network_mode: host  # Use host network for direct access to Ollama
+
+  ollama:
+    container_name: health_monitor_ollama
+    image: ollama/ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
     networks:
       - net1
 
@@ -39,8 +59,8 @@ services:
     container_name: health_monitor_db
     image: mysql:8.0.33
     environment:
-      MYSQL_ROOT_PASSWORD: "" 
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_DATABASE: health
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
@@ -49,13 +69,15 @@ services:
       retries: 3
     ports:
       - "3308:3306"
-    networks:
-      - net1
     volumes:
       - health_db_data:/var/lib/mysql
+    networks:
+      - net1
 
 networks:
   net1:
+    driver: bridge
 
 volumes:
   health_db_data:
+  ollama_data:
