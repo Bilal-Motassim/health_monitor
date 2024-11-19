@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   spring-backend:
     container_name: health_monitor_spring_backend
@@ -5,7 +7,7 @@ services:
       context: ./health_monitor_spring
       dockerfile: dockerfile
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       db:
         condition: service_healthy
@@ -42,16 +44,25 @@ services:
       context: ./health_monitor_flask
       dockerfile: dockerfile
     ports:
-      - "8000:8000"
-    network_mode: host  # Use host network for direct access to Ollama
+      - "8000:8000"  # Expose Flask backend on port 8000
+    depends_on:
+      - ollama
+    environment:
+      - LLAMA_ENDPOINT=http://ollama:11434/v1/chat/completions
+    volumes:
+      - ./health_monitor_flask:/app
+    restart: always
+    networks:
+      - net1
 
   ollama:
     container_name: health_monitor_ollama
     image: ollama/ollama
+    ports:
+      - "11434:11434"  # Expose Ollama service
     volumes:
       - ollama_data:/root/.ollama
-    ports:
-      - "11434:11434"
+    restart: always
     networks:
       - net1
 
