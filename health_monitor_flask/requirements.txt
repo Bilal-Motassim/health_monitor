@@ -1,0 +1,12 @@
+fastapi==0.95.2
+uvicorn==0.22.0
+pillow==9.4.0
+requests==2.31.0
+python-multipart==0.0.6
+transformers==4.29.2
+torch==1.13.1
+torchvision==0.14.1
+torchaudio==0.13.1
+numpy<2.0
+#after docker compose up
+#docker exec -it ollama ollama pull llama3 
