@@ -1,0 +1,15 @@
+Build and Run the Project(7elo terminal f folder d health_monitor):
+
+      docker-compose up --build
+
+Verify Services:
+
+      Spring Backend: http://localhost:8081
+      Angular Frontend: http://localhost:4200
+      Flutter Web: http://localhost
+      Flask Backend: http://localhost:8000/docs#/default/classify_image_classify__post
+      Ollama (Llama3): http://localhost:11434
+
+After starting the services pull the Llama3 model inside the Ollama container (Af terminal d pc):
+
+      docker exec -it health_monitor_ollama ollama pull llama3
